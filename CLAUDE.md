@@ -28,7 +28,7 @@ Expo ships breaking changes every SDK release. Before using an Expo or React Nat
 ## Architecture
 
 - `index.ts` → `registerRootComponent(App)`, then `App.tsx` renders `MatchesScreen` (`src/screens/`).
-- `src/config.ts` holds `MATCHES_URL`, the raw GitHub URL of `data/matches.json`. The fetched data is the same JSON as the local file. The template had an `OWNER/REPO` placeholder; it now points at `Interlabs22/test-app`.
+- `src/config.ts` holds `MATCHES_URL`, the raw GitHub URL of `data/matches.json`. The fetched data is the same JSON as the local file. The template had an `OWNER/REPO` placeholder; it now points at this repo (`Viqto0r/matches-task`).
 - Data shape (`data/matches.json`): `{ round, matches: Match[] }`, where `Match = { id, startsAt: ISO-UTC | null, status, minute?, home, away, score: {home, away} | null }` and `home`/`away` are `{ id, name, city }`. Statuses include `finished`, `live` (with `minute`), `scheduled`, and `postponed` (with `startsAt: null`). Handle these edge cases explicitly.
 - Times must be shown in the device's time zone. Status labels are in Russian.
 - Layers: `src/api/matches.ts` (fetch + response validation) → `src/hooks/useMatches.ts` (loading/error/refresh lifecycle, AbortController against races) → `src/screens/MatchesScreen.tsx` (composes `MatchCard`, `FilterTabs`, `StateView`, `UpdatedAgo`, `useFavorites`). Pure logic (filter, sort, formatting, status labels) lives in `src/lib/matches.ts`.
