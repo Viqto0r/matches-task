@@ -71,8 +71,12 @@ export function MatchesScreen() {
 }
 
 const styles = StyleSheet.create({
+  // На широком экране (веб/планшет) не растягиваем карточки на всю ширину.
   container: {
     flex: 1,
+    width: '100%',
+    maxWidth: 720,
+    alignSelf: 'center',
   },
   header: {
     paddingHorizontal: 16,
