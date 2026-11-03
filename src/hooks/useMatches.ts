@@ -22,13 +22,12 @@ export function useMatches(fetcher: Fetcher = fetchMatches): MatchesState {
   const [isLoading, setIsLoading] = useState(true);
   const controllerRef = useRef<AbortController | null>(null);
 
-  const reload = useCallback(() => {
+  // Запрос: состояние меняется только в колбэках промиса.
+  const load = useCallback(() => {
     // Новый запрос отменяет предыдущий: устаревший ответ не перезапишет свежий.
     controllerRef.current?.abort();
     const controller = new AbortController();
     controllerRef.current = controller;
-    setIsLoading(true);
-    setError(null);
 
     fetcher(controller.signal)
       .then((data) => {
@@ -45,10 +44,18 @@ export function useMatches(fetcher: Fetcher = fetchMatches): MatchesState {
       });
   }, [fetcher]);
 
+  // «Повторить» / «Обновить» — по действию пользователя.
+  const reload = useCallback(() => {
+    setIsLoading(true);
+    setError(null);
+    load();
+  }, [load]);
+
+  // Первая загрузка: начальное состояние уже «загрузка», setState в эффекте не нужен.
   useEffect(() => {
-    reload();
+    load();
     return () => controllerRef.current?.abort();
-  }, [reload]);
+  }, [load]);
 
   const hasData = lastUpdated !== null;
   const status = hasData ? 'ready' : error ? 'error' : 'loading';

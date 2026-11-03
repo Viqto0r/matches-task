@@ -8,12 +8,11 @@ type Props = {
 
 // Подпись «Обновлено N сек назад».
 // Секунды вычисляются от since, а не накапливаются счётчиком: так подпись сама сбрасывается,
-// когда приходит новый since, и показывает реальный возраст данных.
+// когда приходит новый since (now < since → max(0, …) = 0), и показывает реальный возраст данных.
 export function UpdatedAgo({ since }: Props) {
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    setNow(Date.now()); // новый since — сразу пересчитать, не дожидаясь тика
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id); // без очистки интервал жил бы после размонтирования
   }, [since]);
