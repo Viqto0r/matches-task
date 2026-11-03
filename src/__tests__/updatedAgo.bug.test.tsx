@@ -37,9 +37,17 @@ describe('Жалоба №2: «Обновлено N сек назад»', () => 
     expect(label()).toBe('Обновлено 30 сек назад');
   });
 
-  it('после закрытия не оставляет работающих таймеров', async () => {
-    const { unmount } = await render(<UpdatedAgo since={new Date()} />);
+  // jest.getTimerCount() тут не годится: планировщик React сам держит setTimeout'ы.
+  // Проверяем точно: каждый созданный компонентом интервал должен быть очищен.
+  it('после закрытия не оставляет работающих интервалов', async () => {
+    const setSpy = jest.spyOn(globalThis, 'setInterval');
+    const clearSpy = jest.spyOn(globalThis, 'clearInterval');
+    const { rerender, unmount } = await render(<UpdatedAgo since={new Date()} />);
+    await rerender(<UpdatedAgo since={new Date(NOW.getTime() + 1000)} />);
     await unmount();
-    expect(jest.getTimerCount()).toBe(0);
+    const created = setSpy.mock.results.map((r) => r.value);
+    const cleared = clearSpy.mock.calls.map(([id]) => id);
+    expect(created.length).toBeGreaterThan(0);
+    expect(created.filter((id) => !cleared.includes(id))).toEqual([]);
   });
 });
