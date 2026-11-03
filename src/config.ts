@@ -1,4 +1,5 @@
-// Данные матчей — файл data/matches.json из этого репозитория, отданный по HTTP.
-// Адрес менять не нужно.
+// Данные матчей — файл data/matches.json из репозитория, отданный по HTTP.
+// В шаблоне был плейсхолдер OWNER/REPO (запрос по нему отдаёт 404).
+// Указан исходный репозиторий задания; в своей публичной копии можно заменить на её адрес.
 export const MATCHES_URL =
-  'https://raw.githubusercontent.com/OWNER/REPO/main/data/matches.json';
+  'https://raw.githubusercontent.com/Interlabs22/test-app/main/data/matches.json';
