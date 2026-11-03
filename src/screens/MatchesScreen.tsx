@@ -46,7 +46,8 @@ export function MatchesScreen() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Обновить"
-              accessibilityState={{ disabled: isRefreshing, busy: isRefreshing }}
+              aria-disabled={isRefreshing}
+              aria-busy={isRefreshing}
               disabled={isRefreshing}
               onPress={reload}
               style={styles.refresh}

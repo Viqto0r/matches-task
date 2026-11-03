@@ -15,7 +15,8 @@ export function FilterTabs({ value, onChange }: Props) {
           <Pressable
             key={filter}
             accessibilityRole="tab"
-            accessibilityState={{ selected }}
+            // aria-*, а не accessibilityState: react-native-web 0.21 игнорирует accessibilityState
+            aria-selected={selected}
             onPress={() => onChange(filter)}
             style={[styles.tab, selected && styles.tabSelected]}
           >
