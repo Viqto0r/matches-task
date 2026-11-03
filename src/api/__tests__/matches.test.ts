@@ -1,7 +1,7 @@
 import { MATCHES_URL } from '../../config';
 import { fetchMatches, parseMatchesResponse } from '../matches';
 
-const fixture = require('../../../data/matches.json');
+import fixture from '../../../data/matches.json';
 
 describe('parseMatchesResponse', () => {
   it('разбирает пример ответа со всеми матчами', () => {
@@ -25,20 +25,20 @@ describe('parseMatchesResponse', () => {
 });
 
 describe('fetchMatches', () => {
-  const originalFetch = global.fetch;
+  const originalFetch = globalThis.fetch;
   afterEach(() => {
-    global.fetch = originalFetch;
+    globalThis.fetch = originalFetch;
   });
 
   it('при HTTP-ошибке отклоняется с кодом статуса', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) });
+    globalThis.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) });
     await expect(fetchMatches()).rejects.toThrow(/404/);
   });
 
   it('загружает MATCHES_URL и возвращает разобранные матчи', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 200, json: async () => fixture });
+    globalThis.fetch = jest.fn().mockResolvedValue({ ok: true, status: 200, json: async () => fixture });
     const matches = await fetchMatches();
-    expect(global.fetch).toHaveBeenCalledWith(MATCHES_URL, expect.anything());
+    expect(globalThis.fetch).toHaveBeenCalledWith(MATCHES_URL, expect.anything());
     expect(matches).toEqual(parseMatchesResponse(fixture));
   });
 });
